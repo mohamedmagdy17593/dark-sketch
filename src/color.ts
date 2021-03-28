@@ -9,4 +9,3 @@ export const RED = '#ff3f34';
 export const PINK = '#ef5777';
 export const BLUE = '#0fbcf9';
 export const GREEN = '#05c46b';
-export const ORANGE = '#ffa801';

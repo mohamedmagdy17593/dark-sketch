@@ -3,18 +3,7 @@
 import React from 'react';
 import { FaPaintBrush, FaHandPaper } from 'react-icons/fa';
 import { RiEraserFill } from 'react-icons/ri';
-import {
-  BLUE,
-  GRAY,
-  GREEN,
-  ORANGE,
-  PINK,
-  RED,
-  WHITE,
-  YELLOW,
-  DARK,
-} from './color';
-import { BrushIcon } from './Icon';
+import { BLUE, GRAY, GREEN, PINK, RED, WHITE, YELLOW, DARK } from './color';
 import { setColor, setTool, Tools as ToolsType, useSketch } from './sketch';
 
 function Toolbar() {
@@ -25,7 +14,7 @@ function Toolbar() {
         top: '5%',
         display: 'flex',
         flexFlow: 'column',
-        fontSize: 24,
+        fontSize: 18,
         background: GRAY,
         padding: 8,
         borderTopRightRadius: 4,
@@ -38,7 +27,7 @@ function Toolbar() {
           width: '100%',
           border: 0,
           borderBottom: `1px solid ${GRAY}`,
-          margin: '8px 0',
+          margin: '4px 0',
         }}
       />
       <ColorSelector />
@@ -60,7 +49,6 @@ function Tools() {
         color: WHITE,
         display: 'flex',
         flexFlow: 'column',
-        '> *': { padding: '2px' },
         '> *:not(:last-child)': {
           marginBottom: 4,
         },
@@ -99,7 +87,7 @@ function Tools() {
   );
 }
 
-const colors = [WHITE, RED, PINK, BLUE, GREEN, YELLOW, ORANGE];
+const colors = [WHITE, RED, PINK, BLUE, GREEN, YELLOW];
 
 function ColorSelector() {
   let { color: sketchColor } = useSketch();
@@ -109,7 +97,7 @@ function ColorSelector() {
       css={{
         display: 'flex',
         flexFlow: 'column',
-        '> *': { padding: '2px 4px' },
+        alignItems: 'center',
         '> *:not(:last-child)': {
           marginBottom: 4,
         },
@@ -118,14 +106,20 @@ function ColorSelector() {
       {colors.map((color) => {
         let isSelected = color === sketchColor;
         return (
-          <BrushIcon
+          <div
             key={color}
-            color={color}
-            selected={isSelected}
+            css={{
+              width: '1em',
+              height: '1em',
+              background: color,
+              borderRadius: '100%',
+              flexShrink: 0,
+              border: `2px solid ${isSelected ? 'white' : 'transparent'}`,
+            }}
             onClick={() => {
               setColor(color);
             }}
-          />
+          ></div>
         );
       })}
     </div>

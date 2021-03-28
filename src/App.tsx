@@ -4,12 +4,15 @@ import { useLayoutEffect, useRef } from 'react';
 import Canvas from './Canvas';
 import { setAppWrapperPositionAndValidate, useSketch } from './sketch';
 import Toolbar from './Toolbar';
+import useKeyboardGlobalKeys from './useKeyboardGlobalKeys';
 
 function App() {
   let appDivRef = useRef<HTMLDivElement>(null);
   let {
     position: { left, top },
   } = useSketch();
+
+  useKeyboardGlobalKeys();
 
   useLayoutEffect(() => {
     if (appDivRef.current) {
