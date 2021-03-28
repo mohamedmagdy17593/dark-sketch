@@ -17,3 +17,6 @@ export function getSvgPathFromStroke(stroke: number[][]) {
 
   return d.join(' ');
 }
+
+export const CANVAS_WIDTH = 3000;
+export const CANVAS_HEIGHT = 3000;

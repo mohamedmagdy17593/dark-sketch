@@ -5,26 +5,30 @@ import {
   appendToPoints,
   CANVAS_MULTIPLIER,
   clearPoints,
+  dragPoints,
   initCanvas,
   initCtx,
   initPoints,
   resizeCanvas,
+  setDragStartPoint,
   setFillStyle,
   useSketch,
 } from './sketch';
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from './utils';
 
 function Canvas() {
-  let { color: sketchColor, tool } = useSketch();
+  let {
+    color: sketchColor,
+    tool,
+    position: { top, left },
+  } = useSketch();
 
   useLayoutEffect(() => {
     initCtx();
   }, []);
 
-  // on window resize
   useEffect(() => {
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    return () => window.removeEventListener('resize', resizeCanvas);
   }, []);
 
   useEffect(() => {
@@ -37,21 +41,39 @@ function Canvas() {
 
   function handlePointerDown(e: React.PointerEvent) {
     e.preventDefault();
-    initPoints(e.pointerType, [
-      e.pageX * CANVAS_MULTIPLIER,
-      e.pageY * CANVAS_MULTIPLIER,
-      e.pressure,
-    ]);
+    switch (tool) {
+      case 'brush':
+      case 'eraser': {
+        initPoints(e.pointerType, [
+          (left + e.pageX) * CANVAS_MULTIPLIER,
+          (top + e.pageY) * CANVAS_MULTIPLIER,
+          e.pressure,
+        ]);
+        break;
+      }
+      case 'hand': {
+        setDragStartPoint({ x: e.pageX, y: e.pageY });
+      }
+    }
   }
 
   function handlePointerMove(e: React.PointerEvent) {
     e.preventDefault();
     if (e.buttons === 1) {
-      appendToPoints([
-        e.pageX * CANVAS_MULTIPLIER,
-        e.pageY * CANVAS_MULTIPLIER,
-        e.pressure,
-      ]);
+      switch (tool) {
+        case 'brush':
+        case 'eraser': {
+          appendToPoints([
+            (left + e.pageX) * CANVAS_MULTIPLIER,
+            (top + e.pageY) * CANVAS_MULTIPLIER,
+            e.pressure,
+          ]);
+          break;
+        }
+        case 'hand': {
+          dragPoints({ x: e.pageX, y: e.pageY });
+        }
+      }
     }
   }
 
@@ -67,7 +89,7 @@ function Canvas() {
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      css={{ width: '100%', height: '100%', background: DARK }}
+      css={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT, background: DARK }}
     ></canvas>
   );
 }

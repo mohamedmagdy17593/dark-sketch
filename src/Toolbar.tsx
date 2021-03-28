@@ -21,9 +21,8 @@ function Toolbar() {
   return (
     <div
       css={{
-        position: 'absolute',
+        position: 'fixed',
         top: '5%',
-        // transform: 'translate(0, -50%)',
         display: 'flex',
         flexFlow: 'column',
         fontSize: 24,
@@ -120,6 +119,7 @@ function ColorSelector() {
         let isSelected = color === sketchColor;
         return (
           <BrushIcon
+            key={color}
             color={color}
             selected={isSelected}
             onClick={() => {

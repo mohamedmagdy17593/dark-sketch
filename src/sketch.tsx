@@ -1,5 +1,5 @@
 import { proxy, useSnapshot } from 'valtio';
-import { getSvgPathFromStroke } from './utils';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, getSvgPathFromStroke } from './utils';
 import getStroke from 'perfect-freehand';
 import { WHITE } from './color';
 
@@ -10,12 +10,20 @@ export type Tools = 'brush' | 'eraser' | 'hand';
 export const refs = {
   canvas: {} as HTMLCanvasElement,
   ctx: {} as CanvasRenderingContext2D,
-  points: [] as number[][],
+  // for brush and eraser
   pointType: '',
+  points: [] as number[][],
+  // for hand
+  startPoint: { top: 0, left: 0 },
+  startXAndY: { x: 0, y: 0 },
 };
 export const sketchState = proxy({
   color: WHITE,
   tool: 'brush' as Tools,
+  position: {
+    top: (CANVAS_HEIGHT - window.innerHeight) / 2,
+    left: (CANVAS_WIDTH - window.innerWidth) / 2,
+  },
 });
 
 export function useSketch() {
@@ -37,9 +45,8 @@ export function initCtx() {
  * Canvas Actions
  */
 export function resizeCanvas() {
-  refs.canvas.width = window.innerWidth * CANVAS_MULTIPLIER;
-  refs.canvas.height = window.innerHeight * CANVAS_MULTIPLIER;
-  setFillStyle(sketchState.color);
+  refs.canvas.width = CANVAS_WIDTH * CANVAS_MULTIPLIER;
+  refs.canvas.height = CANVAS_HEIGHT * CANVAS_MULTIPLIER;
 }
 
 export function setFillStyle(color: string) {
@@ -78,6 +85,30 @@ export function draw() {
   );
   let p = new Path2D(svgPoints);
   refs.ctx.fill(p);
+}
+
+export function setDragStartPoint({ x, y }: { x: number; y: number }) {
+  refs.startPoint = { ...sketchState.position };
+  refs.startXAndY = { x, y };
+}
+
+export function dragPoints({ x, y }: { x: number; y: number }) {
+  let dx = x - refs.startXAndY.x;
+  let dy = y - refs.startXAndY.y;
+  sketchState.position.left = refs.startPoint.left - dx;
+  sketchState.position.top = refs.startPoint.top - dy;
+}
+
+export function setAppWrapperPositionAndValidate(
+  node: HTMLDivElement,
+  { top, left }: { top: number; left: number },
+) {
+  // set values to dom
+  node.scrollTop = top;
+  node.scrollLeft = left;
+  // validate top and left value from dom
+  sketchState.position.top = node.scrollTop;
+  sketchState.position.left = node.scrollLeft;
 }
 
 /**
