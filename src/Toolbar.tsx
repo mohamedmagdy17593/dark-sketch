@@ -87,7 +87,7 @@ function Tools() {
   );
 }
 
-const colors = [WHITE, RED, PINK, BLUE, GREEN, YELLOW];
+const colors = [WHITE, BLUE, GREEN, YELLOW, RED, PINK];
 
 function ColorSelector() {
   let { color: sketchColor } = useSketch();
