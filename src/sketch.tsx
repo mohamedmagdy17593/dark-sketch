@@ -5,6 +5,8 @@ import { WHITE } from './color';
 
 export const CANVAS_MULTIPLIER = 2;
 
+export type Tools = 'brush' | 'eraser' | 'hand';
+
 export const refs = {
   canvas: {} as HTMLCanvasElement,
   ctx: {} as CanvasRenderingContext2D,
@@ -13,6 +15,7 @@ export const refs = {
 };
 export const sketchState = proxy({
   color: WHITE,
+  tool: 'brush' as Tools,
 });
 
 export function useSketch() {
@@ -61,7 +64,12 @@ export function clearPoints() {
 export function draw() {
   let svgPoints = getSvgPathFromStroke(
     getStroke(refs.points, {
-      size: 16,
+      size:
+        sketchState.tool === 'brush'
+          ? 16
+          : sketchState.tool === 'eraser'
+          ? 60
+          : 0,
       thinning: 0.75,
       smoothing: 0.5,
       streamline: 0.5,
@@ -77,4 +85,8 @@ export function draw() {
  */
 export function setColor(color: string) {
   sketchState.color = color;
+}
+
+export function setTool(tool: Tools) {
+  sketchState.tool = tool;
 }

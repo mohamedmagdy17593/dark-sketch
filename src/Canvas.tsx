@@ -14,7 +14,7 @@ import {
 } from './sketch';
 
 function Canvas() {
-  let { color: sketchColor } = useSketch();
+  let { color: sketchColor, tool } = useSketch();
 
   useLayoutEffect(() => {
     initCtx();
@@ -28,8 +28,12 @@ function Canvas() {
   }, []);
 
   useEffect(() => {
-    setFillStyle(sketchColor);
-  }, [sketchColor]);
+    if (tool === 'brush') {
+      setFillStyle(sketchColor);
+    } else if (tool === 'eraser') {
+      setFillStyle(DARK);
+    }
+  }, [sketchColor, tool]);
 
   function handlePointerDown(e: React.PointerEvent) {
     e.preventDefault();

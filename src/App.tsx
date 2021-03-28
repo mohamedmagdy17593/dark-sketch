@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
 import Canvas from './Canvas';
-import ColorSelector from './ColorSelector';
+import Toolbar from './Toolbar';
 
 function App() {
   return (
     <div css={{ width: '100%', height: '100vh', position: 'relative' }}>
-      <ColorSelector />
+      <Toolbar />
       <Canvas />
     </div>
   );

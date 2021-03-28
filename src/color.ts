@@ -1,5 +1,6 @@
 export const DARK = `#1e272e`;
 export const WHITE = `#d2dae2`;
+export const GRAY = `#485460`;
 
 export const RED = '#ff3f34';
 export const PINK = '#ef5777';
