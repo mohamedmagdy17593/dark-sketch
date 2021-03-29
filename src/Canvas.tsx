@@ -79,7 +79,8 @@ function Canvas() {
     }
   }
 
-  function handlePointerUp() {
+  function handlePointerUp(e: React.PointerEvent) {
+    e.preventDefault();
     switch (tool) {
       case 'brush':
       case 'eraser': {
@@ -98,10 +99,16 @@ function Canvas() {
       ref={(node) => {
         initCanvas(node!);
       }}
+      // PointerEvent
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      css={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT, background: DARK }}
+      css={{
+        width: CANVAS_WIDTH,
+        height: CANVAS_HEIGHT,
+        background: DARK,
+        touchAction: 'none',
+      }}
     />
   );
 }
