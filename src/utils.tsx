@@ -1,5 +1,7 @@
 import { CANVAS_HEIGHT, CANVAS_MULTIPLIER, CANVAS_WIDTH } from './sketch';
 
+export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 export function getSvgPathFromStroke(stroke: number[][]) {
   if (stroke.length === 0) return '';
 

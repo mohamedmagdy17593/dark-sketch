@@ -1,5 +1,5 @@
 import { proxy, useSnapshot } from 'valtio';
-import { getCanvasImageData, getSvgPathFromStroke } from './utils';
+import { getCanvasImageData, getSvgPathFromStroke, isMobile } from './utils';
 import getStroke from 'perfect-freehand';
 import { WHITE } from './color';
 import {
@@ -8,9 +8,9 @@ import {
   pushToHistory,
 } from './history';
 
-export const CANVAS_MULTIPLIER = 2;
-export const CANVAS_WIDTH = 3000;
-export const CANVAS_HEIGHT = 3000;
+export const CANVAS_MULTIPLIER = isMobile ? 1 : 2;
+export const CANVAS_WIDTH = isMobile ? 1800 : 3000;
+export const CANVAS_HEIGHT = isMobile ? 1800 : 3000;
 
 export type Tools = 'brush' | 'eraser' | 'hand';
 
