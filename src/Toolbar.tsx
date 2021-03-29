@@ -1,9 +1,15 @@
 /** @jsxImportSource @emotion/react */
 
 import React from 'react';
-import { FaPaintBrush, FaHandPaper } from 'react-icons/fa';
+import {
+  FaPaintBrush,
+  FaHandPaper,
+  FaUndoAlt,
+  FaRedoAlt,
+} from 'react-icons/fa';
 import { RiEraserFill } from 'react-icons/ri';
 import { BLUE, GRAY, GREEN, PINK, RED, WHITE, YELLOW, DARK } from './color';
+import { redo, undo, useHistoryManager } from './history';
 import { setColor, setTool, Tools as ToolsType, useSketch } from './sketch';
 
 function Toolbar() {
@@ -37,6 +43,7 @@ function Toolbar() {
 
 function Tools() {
   let { tool } = useSketch();
+  let { canUndo, canRedo } = useHistoryManager();
 
   function handleSelectTool(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     let tool = e.currentTarget.name;
@@ -49,6 +56,9 @@ function Tools() {
         color: WHITE,
         display: 'flex',
         flexFlow: 'column',
+        '> *': {
+          cursor: 'pointer',
+        },
         '> *:not(:last-child)': {
           marginBottom: 4,
         },
@@ -83,6 +93,10 @@ function Tools() {
           onClick={handleSelectTool}
         />
       </label>
+
+      <FaUndoAlt css={{ opacity: canUndo ? 1 : 0.5 }} onClick={() => undo()} />
+
+      <FaRedoAlt css={{ opacity: canRedo ? 1 : 0.5 }} onClick={() => redo()} />
     </div>
   );
 }
@@ -98,6 +112,9 @@ function ColorSelector() {
         display: 'flex',
         flexFlow: 'column',
         alignItems: 'center',
+        '> *': {
+          cursor: 'pointer',
+        },
         '> *:not(:last-child)': {
           marginBottom: 4,
         },

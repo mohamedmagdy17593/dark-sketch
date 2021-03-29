@@ -4,6 +4,8 @@ import { DARK } from './color';
 import {
   appendToPoints,
   CANVAS_MULTIPLIER,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
   clearPoints,
   dragPoints,
   initCanvas,
@@ -13,8 +15,8 @@ import {
   setDragStartPoint,
   setFillStyle,
   useSketch,
+  commitToHistory,
 } from './sketch';
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from './utils';
 
 function Canvas() {
   let {
@@ -78,7 +80,17 @@ function Canvas() {
   }
 
   function handlePointerUp() {
-    clearPoints();
+    switch (tool) {
+      case 'brush':
+      case 'eraser': {
+        clearPoints();
+        commitToHistory();
+        break;
+      }
+      case 'hand': {
+        // Nothing
+      }
+    }
   }
 
   return (
@@ -90,7 +102,7 @@ function Canvas() {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       css={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT, background: DARK }}
-    ></canvas>
+    />
   );
 }
 

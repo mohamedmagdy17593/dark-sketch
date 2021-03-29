@@ -1,3 +1,5 @@
+import { CANVAS_HEIGHT, CANVAS_MULTIPLIER, CANVAS_WIDTH } from './sketch';
+
 export function getSvgPathFromStroke(stroke: number[][]) {
   if (stroke.length === 0) return '';
 
@@ -18,5 +20,11 @@ export function getSvgPathFromStroke(stroke: number[][]) {
   return d.join(' ');
 }
 
-export const CANVAS_WIDTH = 3000;
-export const CANVAS_HEIGHT = 3000;
+export function getCanvasImageData(ctx: CanvasRenderingContext2D) {
+  return ctx.getImageData(
+    0,
+    0,
+    CANVAS_WIDTH * CANVAS_MULTIPLIER,
+    CANVAS_HEIGHT * CANVAS_MULTIPLIER,
+  );
+}

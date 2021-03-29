@@ -1,9 +1,16 @@
 import { proxy, useSnapshot } from 'valtio';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, getSvgPathFromStroke } from './utils';
+import { getCanvasImageData, getSvgPathFromStroke } from './utils';
 import getStroke from 'perfect-freehand';
 import { WHITE } from './color';
+import {
+  CanvasHistoryState,
+  initHistoryManager,
+  pushToHistory,
+} from './history';
 
 export const CANVAS_MULTIPLIER = 2;
+export const CANVAS_WIDTH = 3000;
+export const CANVAS_HEIGHT = 3000;
 
 export type Tools = 'brush' | 'eraser' | 'hand';
 
@@ -39,6 +46,7 @@ export function initCanvas(node: HTMLCanvasElement) {
 
 export function initCtx() {
   refs.ctx = refs.canvas.getContext('2d')!;
+  initHistoryManager(getCanvasImageData(refs.ctx));
 }
 
 /**
@@ -73,9 +81,9 @@ export function draw() {
     getStroke(refs.points, {
       size:
         sketchState.tool === 'brush'
-          ? 16
+          ? 14
           : sketchState.tool === 'eraser'
-          ? 60
+          ? 40
           : 0,
       thinning: 0.75,
       smoothing: 0.5,
@@ -109,6 +117,15 @@ export function setAppWrapperPositionAndValidate(
   // validate top and left value from dom
   sketchState.position.top = node.scrollTop;
   sketchState.position.left = node.scrollLeft;
+}
+
+export function applyCanvasHistoryState(historyState: CanvasHistoryState) {
+  let { imgData } = historyState;
+  refs.ctx.putImageData(imgData, 0, 0);
+}
+
+export function commitToHistory() {
+  pushToHistory(getCanvasImageData(refs.ctx));
 }
 
 /**
