@@ -1,11 +1,26 @@
 import { useEffect } from 'react';
 import { redo, undo } from './history';
-import { setTool } from './sketch';
+import { setTool, sketchState, Tools } from './sketch';
 import { isCmdOrCtrlPressed } from './utils';
 
 function useKeyboardGlobalKeys() {
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
+    let holdingSpace: Tools | null = null;
+
+    const downHandler = (e: KeyboardEvent) => {
+      // Hacky i think
+      if (e.code === 'Space') {
+        if (!holdingSpace) {
+          holdingSpace = sketchState.tool;
+          setTool('hand');
+        }
+        return;
+      }
+
+      if (holdingSpace) {
+        return;
+      }
+
       let isCmdZ = isCmdOrCtrlPressed(e) && (e.key === 'z' || e.key === 'Z');
       if (isCmdZ && e.shiftKey) {
         e.preventDefault();
@@ -38,8 +53,32 @@ function useKeyboardGlobalKeys() {
       }
     };
 
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    const upHandler = (e: KeyboardEvent) => {
+      // and this is the continue of the Hacky
+      if (e.code === 'Space') {
+        if (holdingSpace) {
+          setTool(holdingSpace);
+          holdingSpace = null;
+        }
+        return;
+      }
+    };
+
+    const blurHandler = () => {
+      if (holdingSpace) {
+        setTool(holdingSpace);
+        holdingSpace = null;
+      }
+    };
+
+    window.addEventListener('keydown', downHandler);
+    window.addEventListener('keyup', upHandler);
+    window.addEventListener('blur', blurHandler);
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+      window.removeEventListener('keyup', upHandler);
+      window.removeEventListener('blur', blurHandler);
+    };
   }, []);
 }
 
