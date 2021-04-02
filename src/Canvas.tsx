@@ -26,11 +26,11 @@ function Canvas() {
   } = useSketch();
 
   useLayoutEffect(() => {
-    initCtx();
+    resizeCanvas();
   }, []);
 
-  useEffect(() => {
-    resizeCanvas();
+  useLayoutEffect(() => {
+    initCtx();
   }, []);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ function Canvas() {
       css={{
         width: CANVAS_WIDTH,
         height: CANVAS_HEIGHT,
-        background: DARK,
+        // background: DARK,
         touchAction: 'none',
       }}
     />

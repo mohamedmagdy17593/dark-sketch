@@ -1,7 +1,12 @@
 import { proxy, useSnapshot } from 'valtio';
-import { getCanvasImageData, getSvgPathFromStroke, isMobile } from './utils';
+import {
+  downloadCanvas,
+  getCanvasImageData,
+  getSvgPathFromStroke,
+  isMobile,
+} from './utils';
 import getStroke from 'perfect-freehand';
-import { WHITE } from './color';
+import { DARK, YELLOW } from './color';
 import {
   CanvasHistoryState,
   initHistoryManager,
@@ -25,7 +30,7 @@ export const refs = {
   startXAndY: { x: 0, y: 0 },
 };
 export const sketchState = proxy({
-  color: WHITE,
+  color: YELLOW,
   tool: 'brush' as Tools,
   position: {
     top: (CANVAS_HEIGHT - window.innerHeight) / 2,
@@ -46,6 +51,10 @@ export function initCanvas(node: HTMLCanvasElement) {
 
 export function initCtx() {
   refs.ctx = refs.canvas.getContext('2d')!;
+  // set default canvas color
+  refs.ctx.fillStyle = DARK;
+  refs.ctx.fillRect(0, 0, refs.canvas.width, refs.canvas.height);
+  // init history
   initHistoryManager(getCanvasImageData(refs.ctx));
 }
 
@@ -122,6 +131,23 @@ export function setAppWrapperPositionAndValidate(
 export function applyCanvasHistoryState(historyState: CanvasHistoryState) {
   let { imgData } = historyState;
   refs.ctx.putImageData(imgData, 0, 0);
+}
+
+export function clearCanvas() {
+  refs.ctx.clearRect(0, 0, refs.canvas.width, refs.canvas.height);
+  commitToHistory();
+}
+
+export function saveCanvas() {
+  downloadCanvas(
+    refs.canvas,
+    // {
+    //   x: sketchState.position.left,
+    //   y: sketchState.position.top,
+    //   h: window.innerHeight,
+    //   w: window.innerWidth,
+    // }
+  );
 }
 
 export function commitToHistory() {

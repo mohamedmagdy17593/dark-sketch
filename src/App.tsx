@@ -14,6 +14,7 @@ function App() {
 
   useKeyboardGlobalKeys();
 
+  // using hand tool
   useLayoutEffect(() => {
     if (appDivRef.current) {
       setAppWrapperPositionAndValidate(appDivRef.current, { left, top });

@@ -7,10 +7,18 @@ import {
   FaUndoAlt,
   FaRedoAlt,
 } from 'react-icons/fa';
-import { RiEraserFill } from 'react-icons/ri';
+import { RiEraserFill, RiSave2Fill } from 'react-icons/ri';
+import { AiOutlineClear } from 'react-icons/ai';
 import { BLUE, GRAY, GREEN, PINK, RED, WHITE, YELLOW, DARK } from './color';
 import { redo, undo, useHistoryManager } from './history';
-import { setColor, setTool, Tools as ToolsType, useSketch } from './sketch';
+import {
+  clearCanvas,
+  saveCanvas,
+  setColor,
+  setTool,
+  Tools as ToolsType,
+  useSketch,
+} from './sketch';
 
 function Toolbar() {
   return (
@@ -97,6 +105,10 @@ function Tools() {
       <FaUndoAlt css={{ opacity: canUndo ? 1 : 0.5 }} onClick={() => undo()} />
 
       <FaRedoAlt css={{ opacity: canRedo ? 1 : 0.5 }} onClick={() => redo()} />
+
+      <AiOutlineClear onClick={() => clearCanvas()} />
+
+      <RiSave2Fill onClick={() => saveCanvas()} />
     </div>
   );
 }

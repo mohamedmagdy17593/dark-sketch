@@ -38,3 +38,16 @@ export function isCmdOrCtrlPressed(e: KeyboardEvent) {
 export function isMac() {
   return /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 }
+
+export function downloadCanvas(
+  canvas: HTMLCanvasElement,
+  // { x, y, h, w }: { x: number; y: number; h: number; w: number },
+) {
+  let link = document.createElement('a');
+  link.setAttribute('download', 'dark-sketch.jpeg');
+  link.setAttribute(
+    'href',
+    canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'),
+  );
+  link.click();
+}
