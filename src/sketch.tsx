@@ -134,7 +134,10 @@ export function applyCanvasHistoryState(historyState: CanvasHistoryState) {
 }
 
 export function clearCanvas() {
-  refs.ctx.clearRect(0, 0, refs.canvas.width, refs.canvas.height);
+  refs.ctx.fillStyle = DARK;
+  refs.ctx.fillRect(0, 0, refs.canvas.width, refs.canvas.height);
+  refs.ctx.fillStyle = sketchState.color;
+
   commitToHistory();
 }
 
